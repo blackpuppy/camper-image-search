@@ -46,8 +46,8 @@ app.get('/api/imagesearch/:term', function(req, res) {
       // res.send(resp.items.length + ' item(s) returned');
 
       console.log(resp.items.length + ' item(s) returned');
-      console.log('First result name is ' + resp.items[0].title);
-      console.log('First result: ', resp.items[0]);
+      // console.log('First result name is ' + resp.items[0].title);
+      // console.log('First result: ', resp.items[0]);
 
       var results = [];
       resp.items.forEach(function (image) {
@@ -58,9 +58,11 @@ app.get('/api/imagesearch/:term', function(req, res) {
           context: image.image.context
         });
       });
+
+      res.setHeader('Content-Type', 'application/json');
       res.send(JSON.stringify(results));
 
-      console.log('results: ', results);
+      // console.log('results: ', results);
     }
     res.end();
 
@@ -91,7 +93,42 @@ app.get('/api/imagesearch/:term', function(req, res) {
 });
 
 app.get('/api/latest/imagesearch', function(req, res) {
-  res.end('To be implemented');
+  MongoClient.connect(url, function (err, db) {
+    if (err) {
+      console.log('Unable to connect to the mongoDB server. Error: ', err);
+    } else {
+      console.log('Connection established to ', url);
+
+      var collection = db.collection('searches');
+      collection.find({},{
+        _id: 0,
+        term: 1,
+        date: 1
+      }).sort({
+        date: -1
+      }).limit(10).toArray(function (err, records) {
+        if (err) {
+          return console.log('Error encountered in query: ', err);
+        }
+
+        var results = [];
+        records.forEach(function (record) {
+          results.push({
+            term: record.term,
+            when: record.date
+          });
+        });
+
+        console.log(results);
+
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify(results));
+        res.end();
+
+        db.close();
+      });
+    }
+  });
 });
 
 app.listen(app.get('port'), function() {

@@ -50,12 +50,12 @@ app.get('/api/imagesearch/:term', function(req, res) {
       // console.log('First result: ', resp.items[0]);
 
       var results = [];
-      resp.items.forEach(function (image) {
+      resp.items.forEach(function (item) {
         results.push({
-          url: image.link,
-          thumbnail: image.image.thumbnailLink,
-          snippet: image.snippet,
-          context: image.image.context
+          url: item.link,
+          thumbnail: item.image.thumbnailLink,
+          snippet: item.snippet,
+          context: item.image.contextLink
         });
       });
 

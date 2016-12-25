@@ -1,6 +1,11 @@
+// console.log(process.env.CSE_ID, process.env.CSE_API_KEY);
+console.log(process.env.MONGODB_URI);
+
 var express = require('express');
 
-// console.log(process.env.CSE_ID, process.env.CSE_API_KEY);
+var mongodb = require('mongodb');
+var MongoClient = mongodb.MongoClient;
+var url = process.env.MONGODB_URI;
 
 var googleapis = require('googleapis');
 var customsearch = googleapis.customsearch('v1');
@@ -58,6 +63,30 @@ app.get('/api/imagesearch/:term', function(req, res) {
       console.log('results: ', results);
     }
     res.end();
+
+    MongoClient.connect(url, function (err, db) {
+      if (err) {
+        console.log('Unable to connect to the mongoDB server. Error: ', err);
+      } else {
+        console.log('Connection established to ', url);
+
+        var collection = db.collection('searches');
+        var doc = {
+          term: term,
+          date: new Date()
+        };
+        collection.insert(doc, function (err, data) {
+          if (err) {
+            console.error('Error in inserting: ', err);
+            throw err;
+          }
+
+          console.log(JSON.stringify(doc));
+
+          db.close();
+        });
+      }
+    });
   });
 });
 

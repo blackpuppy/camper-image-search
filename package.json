@@ -1,0 +1,23 @@
+{
+  "name": "camp-timestamp",
+  "version": "1.0.0",
+  "description": "FreeCodeCamp Image Search Abstraction Layer project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/blackpuppy/camp-timestamp.git"
+  },
+  "author": "Zhu Ming",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/blackpuppy/camp-timestamp/issues"
+  },
+  "homepage": "https://github.com/blackpuppy/camp-timestamp#readme",
+  "dependencies": {
+    "express": "^4.14.0",
+    "googleapis": "^15.0.0"
+  }
+}
